@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Find the Right Specialist - CARE Hospitals Visakhapatnam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#12262b; --teal:#0e7c6b; --teal-l:#3fae9a; --cream:#f3f6f4; --paper:#fdfefd; --line:#dce6e2; }
+  * { box-sizing: border-box; margin: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body { font-family: 'Inter', sans-serif; background: #0c1a1e; color: var(--ink); display: flex; justify-content: center; }
+  .app { width: 100%; max-width: 460px; min-height: 100dvh; background: var(--cream); position: relative; overflow: hidden; box-shadow: 0 0 60px rgba(0,0,0,.5); }
+  .screen { position: absolute; inset: 0; display: flex; flex-direction: column; opacity: 0; pointer-events: none; transform: translateX(40px); transition: opacity .35s ease, transform .35s ease; overflow-y: auto; }
+  .screen.on { opacity: 1; pointer-events: auto; transform: none; }
+  .screen.off-left { transform: translateX(-40px); }
+
+  .phead { display: flex; align-items: center; gap: 12px; padding: 16px 18px 10px; }
+  .back { border: 0; background: none; font-size: 20px; color: var(--ink); cursor: pointer; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; }
+  .back:active { background: rgba(0,0,0,.06); }
+  .back.hidden { visibility: hidden; }
+  .ptext { font-size: 11px; letter-spacing: .14em; font-weight: 600; color: var(--teal); text-transform: uppercase; }
+  .pbar { flex: 1; height: 3px; background: var(--line); border-radius: 2px; overflow: hidden; }
+  .pbar i { display: block; height: 100%; background: linear-gradient(90deg, var(--teal), var(--teal-l)); width: 0%; transition: width .4s ease; border-radius: 2px; }
+
+  .hero { color: #fff; justify-content: flex-end; }
+  .hero .bg { position: absolute; inset: 0; background: linear-gradient(160deg, #0b2b2c 0%, #0e4a44 45%, #0e7c6b 100%); }
+  .hero .shade { position: absolute; inset: 0; background:
+      radial-gradient(circle at 85% 18%, rgba(63,174,154,.35), transparent 55%),
+      linear-gradient(180deg, rgba(10,26,29,.35) 0%, rgba(10,26,29,.1) 40%, rgba(10,26,29,.82) 82%, #0c1a1e 100%); }
+  .hero .cross { position: absolute; top: 46px; right: 30px; width: 64px; height: 64px; border-radius: 18px; background: rgba(255,255,255,.08); display: grid; place-items: center; }
+  .hero .cross svg { width: 34px; height: 34px; stroke: var(--teal-l); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  .hero .content { position: relative; padding: 28px 24px 34px; }
+  .eyebrow { font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--teal-l); font-weight: 600; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: 38px; line-height: 1.1; font-weight: 600; margin: 8px 0 4px; }
+  .hero h1 em { font-style: italic; color: var(--teal-l); }
+  .hero .sub { font-size: 14px; color: rgba(255,255,255,.85); margin-bottom: 20px; }
+  .promise { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+  .promise span { font-size: 13px; color: rgba(255,255,255,.82); display: flex; gap: 9px; align-items: center; }
+  .promise b { color: var(--teal-l); font-weight: 600; }
+  .safety { font-size: 11.5px; color: rgba(255,255,255,.62); border-top: 1px solid rgba(255,255,255,.14); padding-top: 12px; margin-bottom: 18px; line-height: 1.5; }
+
+  .btn { width: 100%; border: 0; border-radius: 14px; padding: 16px; font-size: 15.5px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: transform .12s ease, box-shadow .2s ease, opacity .2s; }
+  .btn:active { transform: scale(.975); }
+  .btn.teal { background: linear-gradient(120deg, var(--teal), var(--teal-l)); color: #fff; box-shadow: 0 8px 22px rgba(14,124,107,.35); }
+  .btn:disabled { opacity: .4; box-shadow: none; }
+  .btn.ghost { background: none; border: 1.5px solid var(--line); color: var(--ink); font-weight: 500; }
+
+  .q { padding: 6px 22px 26px; display: flex; flex-direction: column; flex: 1; }
+  .q h2 { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 600; line-height: 1.2; margin: 6px 0 4px; }
+  .q .hint { font-size: 13.5px; color: #6d7a75; margin-bottom: 20px; }
+  .opts { display: flex; flex-direction: column; gap: 11px; }
+  .opt { display: flex; align-items: center; gap: 13px; background: var(--paper); border: 1.5px solid var(--line); border-radius: 15px; padding: 14px 15px; cursor: pointer; text-align: left; font-family: 'Inter', sans-serif; transition: transform .12s ease, border-color .2s, box-shadow .2s; }
+  .opt:active { transform: scale(.98); }
+  .opt.picked { border-color: var(--teal); box-shadow: 0 6px 18px rgba(14,124,107,.18); }
+  .opt .ic { width: 40px; height: 40px; border-radius: 12px; background: #e2efeb; display: grid; place-items: center; flex-shrink: 0; }
+  .opt .ic svg { width: 21px; height: 21px; stroke: var(--teal); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .opt .t { font-size: 15px; font-weight: 600; display: block; }
+  .opt .d { font-size: 12.5px; color: #7c8984; margin-top: 2px; }
+  .q .grow { flex: 1; }
+
+  .loading { align-items: center; justify-content: center; text-align: center; padding: 30px; gap: 18px; }
+  .spin { width: 54px; height: 54px; border-radius: 50%; border: 3px solid var(--line); border-top-color: var(--teal); animation: sp 1s linear infinite; }
+  @keyframes sp { to { transform: rotate(360deg); } }
+  .loading h3 { font-family: 'Playfair Display', serif; font-size: 23px; font-weight: 600; }
+  .loading p { font-size: 13.5px; color: #6d7a75; min-height: 20px; }
+
+  .res { padding: 14px 18px 30px; display: flex; flex-direction: column; gap: 13px; }
+  .rhead { padding: 4px 4px 0; }
+  .rhead .eyebrow { color: var(--teal); }
+  .rhead h2 { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 600; margin-top: 5px; }
+  .rhead p { font-size: 12.5px; color: #6d7a75; margin-top: 4px; line-height: 1.5; }
+  .card { background: var(--paper); border: 1.5px solid var(--line); border-radius: 17px; padding: 15px 16px; opacity: 0; transform: translateY(14px); animation: up .5s ease forwards; }
+  .card:nth-child(2) { animation-delay: .1s; } .card:nth-child(3) { animation-delay: .2s; } .card:nth-child(4) { animation-delay: .3s; } .card:nth-child(5) { animation-delay: .4s; }
+  @keyframes up { to { opacity: 1; transform: none; } }
+  .card .lab { font-size: 10.5px; letter-spacing: .13em; font-weight: 700; color: var(--teal); text-transform: uppercase; margin-bottom: 7px; display: flex; align-items: center; gap: 6px; }
+  .card h3 { font-family: 'Playfair Display', serif; font-size: 21px; font-weight: 600; margin-bottom: 5px; }
+  .card p { font-size: 13px; line-height: 1.55; color: #43514c; }
+  .tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .08em; padding: 3px 8px; border-radius: 20px; text-transform: uppercase; }
+  .tag.ai { background: #e8e2d2; color: #7a6c3f; }
+  .tag.real { background: #dff0ec; color: #0e7c6b; }
+  .urg { background: #fdf3ec; border-color: #f0d9c2; }
+  .urg .lab { color: #b05c17; }
+  .urg p { color: #6b4a2f; }
+  .unit { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); }
+  .unit:first-of-type { border-top: 0; }
+  .unit .un { font-size: 13.5px; font-weight: 600; }
+  .unit .ua { font-size: 11.5px; color: #7c8984; }
+  .unit a { text-decoration: none; font-size: 12.5px; font-weight: 700; color: var(--teal); border: 1.5px solid var(--line); border-radius: 10px; padding: 8px 12px; white-space: nowrap; }
+  .brief { background: #12262b; color: #eaf3f0; border: 0; }
+  .brief .lab { color: var(--teal-l); }
+  .brief table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-bottom: 10px; }
+  .brief td { padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,.09); }
+  .brief td:first-child { color: #93aaa4; width: 82px; }
+  .brief p.note { font-size: 11.5px; color: #93aaa4; line-height: 1.5; }
+  .brief .btn { margin-top: 12px; }
+  .cta-row { display: flex; gap: 10px; }
+  .cta-row .btn { font-size: 13.5px; padding: 13px; text-decoration: none; text-align: center; display: block; }
+  .foot { text-align: center; font-size: 10.5px; color: #8b9893; line-height: 1.6; padding: 4px 10px 0; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <section class="screen hero on" id="s0">
+    <div class="bg"></div><div class="shade"></div>
+    <div class="cross"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
+    <div class="content">
+      <div class="eyebrow">Care Hospitals Visakhapatnam</div>
+      <h1>Find the right <em>specialist</em></h1>
+      <div class="sub">Three questions. The right department. The right unit to call.</div>
+      <div class="promise">
+        <span><b>1</b> Tell us what is troubling you</span>
+        <span><b>2</b> We match it to a CARE specialty</span>
+        <span><b>3</b> You call or send a request - CARE confirms</span>
+      </div>
+      <div class="safety">A guide to the right department - not medical advice. For severe symptoms, go straight to CARE Emergency, open 24x7 at every unit.</div>
+      <button class="btn teal" id="start">Find my specialist</button>
+    </div>
+  </section>
+
+  <section class="screen" id="s1">
+    <div class="phead">
+      <button class="back hidden">&#8592;</button>
+      <div><div class="ptext">Question 1 of 3</div></div>
+      <div class="pbar"><i style="width:33%"></i></div>
+    </div>
+    <div class="q">
+      <h2>What is the main concern?</h2>
+      <div class="hint">Pick the closest match - it does not need to be exact.</div>
+      <div class="opts" id="concern">
+        <button class="opt" data-c="heart"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.5-9-9c-1.2-2.7.5-6 3.8-6C9 5 10.5 6.5 12 8c1.5-1.5 3-3 5.2-3 3.3 0 5 3.3 3.8 6-2 4.5-9 9-9 9z"/></svg></span><span><span class="t">Heart or chest</span><span class="d">Chest discomfort, palpitations, breathlessness on effort</span></span></button>
+        <button class="opt" data-c="bones"><span class="ic"><svg viewBox="0 0 24 24"><path d="M7 4a2.5 2.5 0 0 0-2 4 2.5 2.5 0 0 0 0 4 2.5 2.5 0 0 0 4 2h6a2.5 2.5 0 0 0 4-2 2.5 2.5 0 0 0 0-4 2.5 2.5 0 0 0-2-4z"/></svg></span><span><span class="t">Bone or joint pain</span><span class="d">Knee, hip, back, shoulder, fracture or injury</span></span></button>
+        <button class="opt" data-c="nerves"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="5"/><path d="M12 14v3M9 17c-2 1-3 2.5-3 4M15 17c2 1 3 2.5 3 4"/></svg></span><span><span class="t">Brain or nerves</span><span class="d">Headache, dizziness, numbness, fits, memory</span></span></button>
+        <button class="opt" data-c="stomach"><span class="ic"><svg viewBox="0 0 24 24"><path d="M8 4h4v5a4 4 0 0 1-8 0zM14 13h4a4 4 0 0 1-4 4h-2v3"/></svg></span><span><span class="t">Stomach or digestion</span><span class="d">Acidity, pain, liver, bowel trouble</span></span></button>
+        <button class="opt" data-c="child"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M6 21c0-3.5 2.7-6 6-6s6 2.5 6 6"/></svg></span><span><span class="t">A child's health</span><span class="d">Fever, growth, vaccination, anything for a child</span></span></button>
+        <button class="opt" data-c="kidney"><span class="ic"><svg viewBox="0 0 24 24"><path d="M9 4c-3 2-5 5-5 8s2 6 5 8c1-2 1-14 0-16zM15 4c3 2 5 5 5 8s-2 6-5 8c-1-2-1-14 0-16z"/></svg></span><span><span class="t">Kidney or urinary</span><span class="d">Burning, stones, swelling, dialysis questions</span></span></button>
+        <button class="opt" data-c="cancer"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></span><span><span class="t">Cancer care</span><span class="d">Screening, diagnosis, second opinion, treatment</span></span></button>
+        <button class="opt" data-c="lungs"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 3v7M9 10c-3 0-5 2.5-5 6v4h6v-7M15 10c3 0 5 2.5 5 6v4h-6v-7"/></svg></span><span><span class="t">Breathing or lungs</span><span class="d">Cough, asthma, breathlessness, sleep issues</span></span></button>
+        <button class="opt" data-c="women"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="5"/><path d="M12 14v7M9 18h6"/></svg></span><span><span class="t">Women's health</span><span class="d">Pregnancy, periods, gynaecology concerns</span></span></button>
+        <button class="opt" data-c="general"><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 12h4l2-5 4 10 2-5h4"/></svg></span><span><span class="t">Something else</span><span class="d">Fever, weakness, general check-up, not sure</span></span></button>
+      </div>
+      <div class="grow"></div>
+    </div>
+  </section>
+
+  <section class="screen" id="s2">
+    <div class="phead">
+      <button class="back" data-to="s1">&#8592;</button>
+      <div><div class="ptext">Question 2 of 3</div></div>
+      <div class="pbar"><i style="width:66%"></i></div>
+    </div>
+    <div class="q">
+      <h2>How long has this been going on?</h2>
+      <div class="hint">A rough idea is enough.</div>
+      <div class="opts" id="dur">
+        <button class="opt" data-d="days"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></span><span><span class="t">Just started</span><span class="d">A few days or less</span></span></button>
+        <button class="opt" data-d="weeks"><span class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></span><span><span class="t">A few weeks</span><span class="d">It keeps coming back</span></span></button>
+        <button class="opt" data-d="months"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 7v5l3 3"/><path d="M18 3l3 3-3 3"/></svg></span><span><span class="t">Months or longer</span><span class="d">A long-standing problem</span></span></button>
+      </div>
+      <div class="grow"></div>
+    </div>
+  </section>
+
+  <section class="screen" id="s3">
+    <div class="phead">
+      <button class="back" data-to="s2">&#8592;</button>
+      <div><div class="ptext">Question 3 of 3</div></div>
+      <div class="pbar"><i style="width:100%"></i></div>
+    </div>
+    <div class="q">
+      <h2>Who is this for?</h2>
+      <div class="hint">Age helps us point you to the right team.</div>
+      <div class="opts" id="who">
+        <button class="opt" data-p="child"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M7 21c0-3.3 2.2-5.5 5-5.5s5 2.2 5 5.5"/></svg></span><span><span class="t">A child</span><span class="d">Under 12 years</span></span></button>
+        <button class="opt" data-p="adult"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M5 21c0-4 3.1-7 7-7s7 3 7 7"/></svg></span><span><span class="t">An adult</span><span class="d">12 to 59 years</span></span></button>
+        <button class="opt" data-p="senior"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M5 21c0-4 3.1-7 7-7 1.5 0 2.9.5 4 1.3M12 14v7M9 21h6"/></svg></span><span><span class="t">A senior</span><span class="d">60 years or above</span></span></button>
+      </div>
+      <div class="grow"></div>
+    </div>
+  </section>
+
+  <section class="screen loading" id="s4">
+    <div class="spin"></div>
+    <h3>Matching your concern</h3>
+    <p id="loadmsg">Checking CARE's departments...</p>
+  </section>
+
+  <section class="screen" id="s5">
+    <div class="phead">
+      <button class="back" data-to="s0" id="again">&#8592;</button>
+      <div><div class="ptext">Your guide</div></div>
+      <div class="pbar"><i style="width:100%"></i></div>
+    </div>
+    <div class="res">
+      <div class="rhead">
+        <div class="eyebrow">Your match</div>
+        <h2 id="ressub">Here is where to start</h2>
+        <p id="resline"></p>
+      </div>
+
+      <div class="card">
+        <div class="lab">Recommended department <span class="tag ai">AI guide</span></div>
+        <h3 id="spec"></h3>
+        <p id="why"></p>
+      </div>
+
+      <div class="card urg" id="urgcard" style="display:none">
+        <div class="lab">Please do not wait</div>
+        <p>If these symptoms are severe right now, go straight to CARE Emergency - open 24x7 at every CARE unit in Visakhapatnam.</p>
+      </div>
+
+      <div class="card">
+        <div class="lab">First visit <span class="tag ai">AI guide</span></div>
+        <p id="visit"></p>
+      </div>
+
+      <div class="card">
+        <div class="lab">CARE units in Visakhapatnam <span class="tag real">Real numbers</span></div>
+        <div class="unit"><div><div class="un">CARE Hospitals, Ramnagar</div><div class="ua">Main multi-specialty unit</div></div><a href="tel:+918916799832">0891 679 9832</a></div>
+        <div class="unit"><div><div class="un">CARE Health City, Arilova</div><div class="ua">Multi-specialty campus</div></div><a href="tel:+914068106589">040 6810 6589</a></div>
+        <div class="unit"><div><div class="un">CARE Hospitals, Maharanipeta</div><div class="ua">City unit</div></div><a href="tel:+918913067000">0891 306 7000</a></div>
+      </div>
+
+      <div class="card brief">
+        <div class="lab">Your visit request - ready to send</div>
+        <table>
+          <tr><td>Department</td><td id="b-spec"></td></tr>
+          <tr><td>Concern</td><td id="b-con"></td></tr>
+          <tr><td>Since</td><td id="b-dur"></td></tr>
+          <tr><td>Patient</td><td id="b-who"></td></tr>
+        </table>
+        <p class="note" id="b-line"></p>
+        <button class="btn teal" id="copy">Copy my request</button>
+      </div>
+
+      <div class="cta-row">
+        <a class="btn teal" href="tel:+918916799832">Call CARE</a>
+        <a class="btn ghost" id="mail" href="mailto:info@carehospitals.com">Email the request</a>
+      </div>
+
+      <div class="foot">Prepared by AI as a guide - not medical advice, and not a booking. A real person at CARE Hospitals confirms the doctor, unit and time.<br>A free demo concept, built for CARE Hospitals Visakhapatnam.</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const CONCERN = {
+  heart:   { name: "heart or chest discomfort", spec: "Cardiology" },
+  bones:   { name: "bone or joint pain", spec: "Orthopaedics" },
+  nerves:  { name: "a brain or nerve concern", spec: "Neurology" },
+  stomach: { name: "stomach or digestion trouble", spec: "Gastroenterology" },
+  child:   { name: "a child's health concern", spec: "Paediatrics" },
+  kidney:  { name: "a kidney or urinary concern", spec: "Nephrology" },
+  cancer:  { name: "cancer care", spec: "Oncology" },
+  lungs:   { name: "breathing or lung trouble", spec: "Pulmonology" },
+  women:   { name: "a women's health concern", spec: "Obstetrics and Gynaecology" },
+  general: { name: "a general health concern", spec: "General Medicine" }
+};
+const DUR = { days: "a few days", weeks: "a few weeks", months: "months or longer" };
+const WHO = { child: "a child", adult: "an adult", senior: "a senior (60+)" };
+let c = null, d = null, p = null;
+window.stage = 'idle';
+const $ = s => document.querySelector(s);
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => {
+    if (s.id === id) { s.classList.remove('off-left'); s.classList.add('on'); }
+    else if (s.classList.contains('on')) { s.classList.remove('on'); s.classList.add('off-left'); }
+    else { s.classList.remove('on', 'off-left'); }
+  });
+}
+$('#start').onclick = () => show('s1');
+document.querySelectorAll('.back').forEach(b => b.onclick = () => { if (b.dataset.to) show(b.dataset.to); });
+
+function pickOpt(box, key, cb) {
+  document.querySelectorAll(box + ' .opt').forEach(x => x.onclick = () => {
+    document.querySelectorAll(box + ' .opt').forEach(y => y.classList.remove('picked'));
+    x.classList.add('picked');
+    cb(x.dataset[key]);
+  });
+}
+pickOpt('#concern', 'c', v => { c = v; setTimeout(() => show('s2'), 320); });
+pickOpt('#dur', 'd', v => { d = v; setTimeout(() => show('s3'), 320); });
+pickOpt('#who', 'p', v => { p = v; setTimeout(run, 320); });
+
+function resolveSpec() {
+  if (p === 'child' && c !== 'women' && c !== 'child') return 'Paediatrics';
+  return CONCERN[c].spec;
+}
+
+async function aiSections(spec) {
+  const fb = {
+    why: `${spec} is the right starting point for ${CONCERN[c].name} that has lasted ${DUR[d]} - this team sees it every day.`,
+    visit: `At a first visit, the specialist will hear your history, examine you, and suggest tests only if they are needed.`,
+    line: `Visit request: ${spec} at CARE Hospitals Visakhapatnam, for ${WHO[p]} with ${CONCERN[c].name} for ${DUR[d]}.`
+  };
+  try {
+    const r = await fetch('https://text.pollinations.ai/openai', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'openai', messages: [
+        { role: 'system', content: 'You are a calm, careful patient-guide assistant for CARE Hospitals Visakhapatnam. Never diagnose. Reply in EXACTLY this format, three lines, no markdown:\nWHY: <one sentence, max 24 words, why this department is the right start for this concern>\nVISIT: <one sentence, max 22 words, what typically happens at a first visit>\nLINE: <one sentence visit-request summary, max 18 words>' },
+        { role: 'user', content: `Concern: ${CONCERN[c].name}. Duration: ${DUR[d]}. Patient: ${WHO[p]}. Recommended department: ${spec}.` }
+      ]})});
+    const t = (await r.json()).choices[0].message.content;
+    const get = k => { const m = t.match(new RegExp(k + ':\\s*(.+)')); return m ? m[1].trim() : null; };
+    return { why: get('WHY') || fb.why, visit: get('VISIT') || fb.visit, line: get('LINE') || fb.line };
+  } catch (e) { return fb; }
+}
+
+let loadTimer = null;
+async function run() {
+  const spec = resolveSpec();
+  show('s4');
+  window.stage = 'thinking';
+  const msgs = ['Checking CARE\'s departments...', 'Matching your concern to the right team...', 'Preparing your visit request...'];
+  let mi = 0;
+  $('#loadmsg').textContent = msgs[0];
+  loadTimer = setInterval(() => { mi = (mi + 1) % msgs.length; $('#loadmsg').textContent = msgs[mi]; }, 1600);
+  const [sec] = await Promise.all([ aiSections(spec), new Promise(r => setTimeout(r, 1800)) ]);
+  clearInterval(loadTimer);
+
+  $('#spec').textContent = spec;
+  $('#why').textContent = sec.why;
+  $('#visit').textContent = sec.visit;
+  $('#ressub').textContent = 'Start with ' + spec;
+  $('#resline').textContent = sec.line;
+  $('#urgcard').style.display = ((c === 'heart' || c === 'lungs') && d === 'days') ? 'block' : 'none';
+  $('#b-spec').textContent = spec;
+  $('#b-con').textContent = CONCERN[c].name;
+  $('#b-dur').textContent = DUR[d];
+  $('#b-who').textContent = WHO[p];
+  $('#b-line').textContent = sec.line + ' Please confirm a suitable doctor and time.';
+  $('#mail').href = 'mailto:info@carehospitals.com?subject=' + encodeURIComponent('Appointment request - ' + spec) + '&body=' + encodeURIComponent(sec.line + ' Please confirm a suitable doctor and time. (Prepared as a guide - CARE confirms all details.)');
+  show('s5');
+  window.stage = 'done';
+}
+
+$('#copy').onclick = async () => {
+  const txt = `My Visit Request - CARE Hospitals Visakhapatnam\nDepartment: ${$('#b-spec').textContent}\nConcern: ${$('#b-con').textContent}\nSince: ${$('#b-dur').textContent}\nPatient: ${$('#b-who').textContent}\n${$('#b-line').textContent}\n(Prepared as a guide, not medical advice - CARE confirms all details.)`;
+  try { await navigator.clipboard.writeText(txt); } catch (e) {}
+  $('#copy').textContent = 'Request copied';
+};
+</script>
+</body>
+  </html>
